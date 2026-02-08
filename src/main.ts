@@ -55,21 +55,23 @@ app.use(VueScrollTo, {
 
 // 2. --- ADD THE AUTH0 PLUGIN CONFIGURATION ---
 //    (Replace with your keys from the Auth0 dashboard)
-app.use(
-    createAuth0({
-        // Find these in your Auth0 "Single Page Application" settings
-        domain: "dev-y5qkyesk4xou2lag.eu.auth0.com", // e.g., "your-tenant.us.auth0.com"
-        clientId: "3LmjmekKi98gx3T8jd0nO6H6MiB85nKt",
+// 2. --- ADD THE AUTH0 PLUGIN CONFIGURATION ---
+//    (Replace with your keys from the Auth0 dashboard)
+export const auth0 = createAuth0({
+    // Find these in your Auth0 "Single Page Application" settings
+    domain: "dev-y5qkyesk4xou2lag.eu.auth0.com", // e.g., "your-tenant.us.auth0.com"
+    clientId: "3LmjmekKi98gx3T8jd0nO6H6MiB85nKt",
 
-        // This tells Auth0 you also want to talk to an API
-        authorizationParams: {
-            redirect_uri: window.location.origin, // This is your Vue app's address
+    // This tells Auth0 you also want to talk to an API
+    authorizationParams: {
+        redirect_uri: window.location.origin, // This is your Vue app's address
 
-            // Find this in your Auth0 "API" (Kommunedata Backend API) settings
-            audience: "https://api.kommunedata.dk" // e.g., "https://api.kommunedata.dk"
-        }
-    })
-);
+        // Find this in your Auth0 "API" (Kommunedata Backend API) settings
+        audience: "https://api.kommunedata.dk" // e.g., "https://api.kommunedata.dk"
+    }
+});
+
+app.use(auth0);
 
 // 3. --- MOUNT THE APP (should always be the last step) ---
 app.mount('#app');

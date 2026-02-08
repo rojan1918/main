@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuth0 } from '@auth0/auth0-vue';
 import { 
     SearchIcon, 
     ChartDotsIcon, 
@@ -10,6 +11,14 @@ import {
 } from 'vue-tabler-icons';
 
 const router = useRouter();
+const { isAuthenticated, isLoading } = useAuth0();
+
+// Auto-redirect if already logged in
+watchEffect(() => {
+    if (!isLoading.value && isAuthenticated.value) {
+        router.push('/dashboards/kommunedata');
+    }
+});
 
 const features = [
     {

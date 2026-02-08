@@ -25,18 +25,25 @@ export const router = createRouter({
     ]
 });
 
+import { auth0 } from '@/main';
+
 router.beforeEach(async (to, from, next) => {
     // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ['/auth/login'];
-    const authRequired = !publicPages.includes(to.path);
-    const auth: any = useAuthStore();
+    const publicPages = ['/auth/login', '/', '/auth/register', '/auth/forgot-password']; // + any other public pages
+    const authRequired = !publicPages.includes(to.path) && !to.matched.some(record => record.meta.requiresAuth === false);
 
-    if (to.matched.some((record) => record.meta.requiresAuth)) {
-        if (authRequired && !auth.user) {
-            auth.returnUrl = to.fullPath;
+    // Auth0 might need a moment to initialize. 
+    // In a robust app, we'd wait for !auth0.isLoading.value, or rely on the auth guard from the SDK.
+    // For now, we check the reactive state.
+
+    if (authRequired) {
+        if (!auth0.isAuthenticated.value) {
+            // If we are not authenticated, redirect to login
+            // But if we are currently loading (e.g. processing callback), we might want to wait?
+            // Simple check:
             return next('/auth/login');
-        } else next();
-    } else {
-        next();
+        }
     }
+
+    next();
 });
