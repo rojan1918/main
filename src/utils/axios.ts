@@ -5,7 +5,8 @@
 import axios from "axios";
 
 const axiosServices = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
+  // Hardcoded for production hotfix to bypass Render Env Var issue
+  baseURL: "https://arevo-api.onrender.com",
 });
 
 // interceptor for http
