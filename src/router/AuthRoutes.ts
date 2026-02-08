@@ -5,41 +5,8 @@ const AuthRoutes = {
         requiresAuth: false
     },
     children: [
-        {
-            name: 'FrontPage',
-            path: '/front-page/homepage',
-            component: () => import('@/views/pages/front-pages/Landingpage.vue')
-        },
-        {
-            name: 'About Us',
-            path: '/front-page/about-us',
-            component: () => import('@/views/pages/front-pages/Aboutpage.vue')
-        },
-        {
-            name: 'Contact',
-            path: '/front-page/contact-us',
-            component: () => import('@/views/pages/front-pages/Contactpage.vue')
-        },
-        {
-            name: 'Pricing1',
-            path: '/front-page/pricing',
-            component: () => import('@/views/pages/front-pages/PackagePricing.vue')
-        },
-        {
-            name: 'Portfolio',
-            path: '/front-page/portfolio',
-            component: () => import('@/views/pages/front-pages/Portfolio.vue')
-        },
-        {
-            name: 'Blog',
-            path: '/front-page/blog/posts',
-            component: () => import('@/views/pages/front-pages/BlogPage.vue')
-        },
-        {
-            name: 'Blog Details',
-            path: '/front-page/blog/:id',
-            component: () => import('@/views/pages/front-pages/BlogDetails.vue')
-        },
+        // Front Pages removed for MVP
+
         {
             name: 'Side Login',
             path: '/auth/login',

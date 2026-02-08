@@ -22,7 +22,7 @@ const authStore = useAuthStore();
         elevation="0"
         rail-width="75"
         app
-        class="leftSidebar"
+        class="leftSidebar border-e"
         :rail="customizer.mini_sidebar"
         expand-on-hover
         width="256"
@@ -31,18 +31,6 @@ const authStore = useAuthStore();
         <!---Navigation -->
         <!-- ---------------------------------------------- -->
         <perfect-scrollbar class="scrollnavbar">
-            <div class="profile">
-                <div class="profile-img py-10 px-3">
-                    <v-avatar size="50">
-                        <img src="@/assets/images/profile/user-1.jpg" width="50" alt="Julia" />
-                    </v-avatar>
-                </div>
-                <div class="profile-name d-flex align-center px-3">
-                    <div class="profile-logout w-100">
-                        <SidebarProfile />
-                    </div>
-                </div>
-            </div>
             <v-list class="py-3 px-4">
                 <!---Menu Loop -->
                 <template v-for="(item, i) in sidebarMenu">
@@ -58,3 +46,9 @@ const authStore = useAuthStore();
         </perfect-scrollbar>
     </v-navigation-drawer>
 </template>
+
+<style scoped>
+.leftSidebar {
+    border-right: 1px solid #E5E5E5 !important;
+}
+</style>

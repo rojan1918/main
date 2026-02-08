@@ -7,11 +7,21 @@ export const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
         {
-            path: '/:pathMatch(.*)*',
-            component: () => import('@/views/authentication/Error.vue')
+            path: '/',
+            component: () => import('@/layouts/blank/BlankLayout.vue'),
+            children: [
+                {
+                    path: '',
+                    component: () => import('@/views/pages/landing/LandingPage.vue')
+                }
+            ]
         },
         MainRoutes,
-        AuthRoutes
+        AuthRoutes,
+        {
+            path: '/:pathMatch(.*)*',
+            component: () => import('@/views/authentication/Error.vue')
+        }
     ]
 });
 

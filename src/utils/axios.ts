@@ -4,7 +4,9 @@
 
 import axios from "axios";
 
-const axiosServices = axios.create();
+const axiosServices = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
+});
 
 // interceptor for http
 axiosServices.interceptors.response.use(

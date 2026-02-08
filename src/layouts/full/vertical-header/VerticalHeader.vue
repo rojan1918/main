@@ -32,7 +32,7 @@ const getCart = computed(() => {
 </script>
 
 <template>
-    <v-app-bar elevation="5" :priority="priority" height="60" color="primary" class="main-head" id="top">
+    <v-app-bar elevation="0" :priority="priority" height="80" color="background" class="main-head border-b" id="top">
         <!---LOGO RTL/LTR--->
         <div class="hidden-sm-and-down">
             <v-locale-provider v-if="customizer.setRTLLayout" rtl>
@@ -71,64 +71,13 @@ const getCart = computed(() => {
         <!-- Search part -->
         <!-- ---------------------------------------------- -->
 
-        <Searchbar />
-
-        <!-- ---------------------------------------------- -->
-        <!-- Mega menu -->
-        <!-- ---------------------------------------------- -->
-        <div class="hidden-sm-and-down">
-            <Navigations />
-        </div>
-
-        <!---/Search part -->
-
-        <v-spacer class="hidden-sm-and-down" />
-        <!-- ---------------------------------------------- -->
-        <!---right part -->
-        <!-- ---------------------------------------------- -->
-        <!-- ---------------------------------------------- -->
-        <!-- translate -->
-        <!-- ---------------------------------------------- -->
-        <div class="hidden-sm-and-down">
-            <LanguageDD />
-        </div>
-
-        <!-- ---------------------------------------------- -->
-        <!-- Mobile Logo -->
-        <!-- ---------------------------------------------- -->
-        <div class="hidden-md-and-up mt-2">
-            <LogoIcon />
-        </div>
-        <div class="me-md-1">
-            <ThemeToggler />
-        </div>
-
-        <!-- ---------------------------------------------- -->
-        <!-- Notification -->
-        <!-- ---------------------------------------------- -->
-        <div class="hidden-sm-and-down">
-            <NotificationDD />
-        </div>
-        <!-- ---------------------------------------------- -->
-        <!-- Messages -->
-        <!-- ---------------------------------------------- -->
-        <div class="hidden-sm-and-down">
-            <Messages />
-        </div>
-
-        <!-- ---------------------------------------------- -->
-        <!-- ShoppingCart -->
-        <!-- ---------------------------------------------- -->
-        <v-btn icon variant="text" color="primary" to="/ecommerce/checkout" size="small" class="ms-1 hidden-sm-and-down custom-hover-primary">
-            <v-badge color="error" :content="getCart?.length">
-                <Icon icon="solar:cart-large-2-outline" height="22" />
-            </v-badge>
-        </v-btn>
+        <!-- Searchbar removed from header to keep it clean, relying on page content search -->
+        <v-spacer />
 
         <!-- ---------------------------------------------- -->
         <!-- User Profile -->
         <!-- ---------------------------------------------- -->
-        <div class="ms -2 hidden-sm-and-down">
+        <div class="ms-2">
             <ProfileDD />
         </div>
 
@@ -142,14 +91,6 @@ const getCart = computed(() => {
             <v-sheet rounded="lg" elevation="10" class="mt-4 dropdown-box px-4 py-3">
                 <div class="d-flex justify-space-between align-center">
                     <RightMobileSidebar />
-                    <LanguageDD />
-                    <v-btn icon variant="text" class="mr-sm-3 mr-2 custom-hover-primary" to="/ecommerce/checkout" size="small">
-                        <v-badge color="error" :content="getCart?.length" offset-x="-4" offset-y="-6">
-                            <Icon icon="solar:cart-large-2-outline" height="22" />
-                        </v-badge>
-                    </v-btn>
-                    <NotificationDD />
-                    <Messages />
                     <ProfileDD />
                 </div>
             </v-sheet>

@@ -7,6 +7,7 @@ import HorizontalSidebar from './horizontal-sidebar/HorizontalSidebar.vue';
 import Customizer from './customizer/Customizer.vue';
 import { useCustomizerStore } from '../../stores/customizer';
 import { SettingsIcon } from 'vue-tabler-icons';
+import Footer from './footer/Footer.vue';
 const customizer = useCustomizerStore();
 </script>
 
@@ -47,6 +48,7 @@ const customizer = useCustomizerStore();
                             <SettingsIcon />
                         </v-btn>
                     </div>
+                    <Footer />
                 </v-container>
             </v-main>
         </v-app>
@@ -87,6 +89,7 @@ const customizer = useCustomizerStore();
                             <SettingsIcon />
                         </v-btn>
                     </div>
+                    <Footer />
                 </v-container>
             </v-main>
         </v-app>
