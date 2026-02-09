@@ -13,12 +13,12 @@ const axiosServices = axios.create({
 axiosServices.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error("AXIOS INTERCEPTOR ERROR:", error); // Help the user debug
-    if (error.response && error.response.data) {
-      return Promise.reject(error.response.data);
-    }
-    // Fallback to error message (e.g., "Network Error") instead of "Wrong Services"
-    return Promise.reject(error.message || "Wrong Services");
+    // LOG THE EXACT URL THAT FAILED
+    const fullUrl = (error.config?.baseURL || '') + (error.config?.url || '');
+    console.error(`AXIOS FAIL: ${error.message} | URL: ${fullUrl}`);
+
+    // Pass the FULL error object so the component can read status and URL
+    return Promise.reject(error);
   }
 );
 
