@@ -25,6 +25,7 @@ export const router = createRouter({
     ]
 });
 
+import { watch } from 'vue';
 import { auth0 } from '@/main';
 
 router.beforeEach(async (to, from, next) => {
@@ -32,16 +33,23 @@ router.beforeEach(async (to, from, next) => {
     const publicPages = ['/auth/login', '/', '/auth/register', '/auth/forgot-password']; // + any other public pages
     const authRequired = !publicPages.includes(to.path) && !to.matched.some(record => record.meta.requiresAuth === false);
 
-    // Auth0 might need a moment to initialize. 
-    // In a robust app, we'd wait for !auth0.isLoading.value, or rely on the auth guard from the SDK.
-    // For now, we check the reactive state.
+    // 1. Wait for Auth0 to initialize if it's currently loading
+    if (auth0.isLoading.value) {
+        await new Promise<void>(resolve => {
+            const unwatch = watch(auth0.isLoading, (isLoading) => {
+                if (!isLoading) {
+                    unwatch();
+                    resolve();
+                }
+            });
+        });
+    }
 
     if (authRequired) {
+        // 2. Now checking isAuthenticated is safe
         if (!auth0.isAuthenticated.value) {
-            // If we are not authenticated, redirect to login
-            // But if we are currently loading (e.g. processing callback), we might want to wait?
-            // Simple check:
-            return next('/auth/login');
+            auth0.loginWithRedirect({ appState: { targetUrl: to.fullPath } });
+            return; // Prevent further navigation, let Auth0 take over
         }
     }
 
