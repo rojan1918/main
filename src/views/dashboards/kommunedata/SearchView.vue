@@ -1,3 +1,4 @@
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue';
 import axios from '@/utils/axios';
