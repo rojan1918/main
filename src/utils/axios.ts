@@ -12,8 +12,14 @@ const axiosServices = axios.create({
 // interceptor for http
 axiosServices.interceptors.response.use(
   (response) => response,
-  (error) =>
-    Promise.reject((error.response && error.response.data) || "Wrong Services")
+  (error) => {
+    console.error("AXIOS INTERCEPTOR ERROR:", error); // Help the user debug
+    if (error.response && error.response.data) {
+      return Promise.reject(error.response.data);
+    }
+    // Fallback to error message (e.g., "Network Error") instead of "Wrong Services"
+    return Promise.reject(error.message || "Wrong Services");
+  }
 );
 
 export default axiosServices;
