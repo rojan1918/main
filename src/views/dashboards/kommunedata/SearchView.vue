@@ -106,12 +106,13 @@ async function performSearch() {
 
     } catch (e: any) {
         console.error("Failed to fetch search results:", e)
-        // Axios error handling
-        if (e.response && e.response.data && e.response.data.detail) {
-            error.value = e.response.data.detail;
-        } else {
-             error.value = e.message || 'An unknown error occurred.';
-        }
+        // VERBOSE DEBUGGING FOR USER
+        const status = e.response?.status || 'Unknown Status';
+        const url = e.config?.url || 'Unknown URL';
+        const message = e.message || 'Unknown Error';
+        const detail = e.response?.data?.detail || '';
+        
+        error.value = `DEBUG ERROR: ${status} | ${message} | URL: ${url} | Detail: ${detail}`;
     } finally {
         isLoading.value = false
     }
