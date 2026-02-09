@@ -11,7 +11,7 @@ import VueTablerIcons from 'vue-tabler-icons';
 import { fakeBackend } from '@/utils/helpers/fake-backend';
 import 'vue3-carousel/dist/carousel.css';
 //Mock Api data
-import './_mockApis';
+// import './_mockApis';
 import Maska from 'maska';
 
 

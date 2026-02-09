@@ -1,6 +1,6 @@
-<script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue';
+import axios from '@/utils/axios';
 import { CATEGORY_OPTIONS, PHASE_OPTIONS } from '@/utils/constants';
 import { 
     SearchIcon, 
@@ -42,13 +42,12 @@ const { getAccessTokenSilently } = useAuth0();
 async function fetchMunicipalities() {
     try {
         const token = await getAccessTokenSilently();
-        const response = await fetch('http://127.0.0.1:8000/municipalities', {
+        // Use global axios instance (configured with correct baseURL)
+        const response = await axios.get('/municipalities', {
             headers: { Authorization: `Bearer ${token}` }
         });
-
-        if (!response.ok) throw new Error('Could not fetch municipalities');
-        const data = await response.json()
-        municipalityList.value = ['Alle', ...data]
+        
+        municipalityList.value = ['Alle', ...response.data];
     } catch (e: any) {
         console.error(e)
         error.value = "Kunne ikke hente kommuneliste."
@@ -93,25 +92,25 @@ async function performSearch() {
     searchResults.value = []
 
     try {
-        const url = `http://127.0.0.1:8000/search?${searchParams.toString()}`;
+        const url = `/search?${searchParams.toString()}`;
 
         const token = await getAccessTokenSilently();
-        const response = await fetch(url, {
-            headers: { Authorization: `Bearer ${token}` }
+        const response = await axios.get(url, {
+             headers: { Authorization: `Bearer ${token}` }
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || 'An unknown error occurred.')
-        }
-
-        const data = await response.json()
+        const data = response.data;
         searchResults.value = data.results
         totalCount.value = data.total_count
 
     } catch (e: any) {
         console.error("Failed to fetch search results:", e)
-        error.value = e.message
+        // Axios error handling
+        if (e.response && e.response.data && e.response.data.detail) {
+            error.value = e.response.data.detail;
+        } else {
+             error.value = e.message || 'An unknown error occurred.';
+        }
     } finally {
         isLoading.value = false
     }

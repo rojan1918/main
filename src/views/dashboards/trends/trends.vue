@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue';
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 import { useAuth0 } from '@auth0/auth0-vue'; // 1. Import Auth0
+import axios from '@/utils/axios';
 
 // Register the necessary components for Chart.js
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
@@ -24,18 +25,14 @@ const { getAccessTokenSilently } = useAuth0();
 // === DATA FETCHING ===
 async function fetchOverallData() {
     try {
-        // 3. Get the token
         const token = await getAccessTokenSilently();
-
-        // 4. Add token to request headers
-        const response = await fetch('http://127.0.0.1:8000/analytics/categories/all', {
+        // Use axios with relative path - baseURL is configured in @/utils/axios
+        const response = await axios.get('/analytics/categories/all', {
             headers: { Authorization: `Bearer ${token}` }
         });
-
-        if (!response.ok) throw new Error('Could not fetch overall data');
-        overallData.value = await response.json();
+        overallData.value = response.data;
     } catch (e: any) {
-        error.value = e.message;
+        error.value = e.message || 'Error fetching data';
     } finally {
         isLoadingOverall.value = false;
     }
@@ -43,18 +40,13 @@ async function fetchOverallData() {
 
 async function fetchMunicipalities() {
     try {
-        // 3. Get the token
         const token = await getAccessTokenSilently();
-
-        // 4. Add token to request headers
-        const response = await fetch('http://127.0.0.1:8000/municipalities', {
+        const response = await axios.get('/municipalities', {
             headers: { Authorization: `Bearer ${token}` }
         });
-
-        if (!response.ok) throw new Error('Could not fetch municipalities');
-        municipalityList.value = await response.json();
+        municipalityList.value = response.data;
     } catch (e: any) {
-        error.value = e.message;
+        error.value = e.message || 'Error fetching municipalities';
     }
 }
 
@@ -63,18 +55,13 @@ async function fetchSingleMunicipalityData() {
     isLoadingSingle.value = true;
     singleMunicipalityData.value = [];
     try {
-        // 3. Get the token
         const token = await getAccessTokenSilently();
-
-        // 4. Add token to request headers
-        const response = await fetch(`http://127.0.0.1:8000/analytics/categories/${selectedMunicipality.value}`, {
+        const response = await axios.get(`/analytics/categories/${selectedMunicipality.value}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
-
-        if (!response.ok) throw new Error('Could not fetch data for this municipality');
-        singleMunicipalityData.value = await response.json();
+        singleMunicipalityData.value = response.data;
     } catch (e: any) {
-        error.value = e.message;
+        error.value = e.message || 'Error fetching municipality data';
     } finally {
         isLoadingSingle.value = false;
     }
