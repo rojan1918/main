@@ -13,12 +13,13 @@ const axiosServices = axios.create({
 axiosServices.interceptors.response.use(
   (response) => response,
   (error) => {
-    // LOG THE EXACT URL THAT FAILED
     const fullUrl = (error.config?.baseURL || '') + (error.config?.url || '');
-    console.error(`AXIOS FAIL: ${error.message} | URL: ${fullUrl}`);
+    console.error(`API Error: ${error.message} | URL: ${fullUrl}`, error.response?.data);
 
-    // Pass the FULL error object so the component can read status and URL
-    return Promise.reject(error);
+    if (error.response && error.response.data) {
+      return Promise.reject(error.response.data);
+    }
+    return Promise.reject(error.message || "Wrong Services");
   }
 );
 
