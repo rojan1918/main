@@ -59,6 +59,25 @@ onMounted(() => {
     fetchMunicipalities()
 })
 
+// === HELPER FOR DEEP LINKING ===
+function getDeepLink(doc: any) {
+    if (!doc.content_url) return '#';
+    let url = doc.content_url;
+    
+    // If we have a search sentence, create a text fragment link
+    if (doc.search_sentences) {
+        // Strip HTML tags (like <b> match highlights)
+        const cleanText = doc.search_sentences.replace(/<[^>]*>/g, '').trim();
+        
+        // Take a reasonable snippet (first 10-15 words) to ensure browser match
+        // encodeURIComponent handles special chars
+        if (cleanText) {
+             url += `#:~:text=${encodeURIComponent(cleanText)}`;
+        }
+    }
+    return url;
+}
+
 // === UPDATED SEARCH FUNCTION ===
 async function performSearch() {
     // Check if at least one search criteria is present (Query, Category, Phase, Municipality != Alle)
