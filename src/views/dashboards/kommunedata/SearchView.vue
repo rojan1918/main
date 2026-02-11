@@ -306,6 +306,14 @@ async function performSearch() {
                                         </p>
                                     </div>
                                     
+                                    <!-- Added Content URL Link with Text Fragment Deep Link -->
+                                    <div v-if="doc.content_url" class="mb-3">
+                                        <span class="text-subtitle-2 font-weight-bold mr-1">Link:</span>
+                                        <a :href="getDeepLink(doc)" target="_blank" class="text-decoration-none text-primary text-body-2" @click.stop>
+                                            {{ doc.content_url }} <v-icon size="small" class="ml-1">mdi-open-in-new</v-icon>
+                                        </a>
+                                    </div>
+
                                      <!-- Summary -->
                                     <p class="text-body-1 text-medium-emphasis mb-4" style="max-width: 900px;" v-if="doc.summary">
                                         {{ doc.summary }}
