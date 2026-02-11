@@ -64,16 +64,25 @@ function getDeepLink(doc: any) {
     if (!doc.content_url) return '#';
     let url = doc.content_url;
     
-    // If we have a search sentence, create a text fragment link
+    // If we have a search sentence, create a SAFE text fragment link
     if (doc.search_sentences) {
-        // Strip HTML tags (like <b> match highlights)
-        const cleanText = doc.search_sentences.replace(/<[^>]*>/g, '').trim();
-        
-        // Take just the first 6 words. Long sentences crash some PDF viewers.
-        const shortSnippet = cleanText.split(/\s+/).slice(0, 6).join(' ');
+        // 1. Strip HTML tags
+        let cleanText = doc.search_sentences.replace(/<[^>]*>/g, '').trim();
 
-        if (shortSnippet) {
-             url += `#:~:text=${encodeURIComponent(shortSnippet)}`;
+        // 2. AGGRESSIVE CLEANING: Remove punctuation (.,- etc) but keep Danish letters (æøå)
+        // This regex replaces anything that is NOT a word character or whitespace with a space.
+        // \w includes [a-zA-Z0-9_], \s is whitespace. 
+        // We also add specific ranges for international characters like ÆØÅ.
+        cleanText = cleanText.replace(/[^\w\s\u00C0-\u017F]/g, ' '); 
+
+        // 3. Take just the first 5 "safe" words.
+        // This avoids special characters crashing certain viewers.
+        // Browsers are usually smart enough to match "Borne og" to "Børne- og"
+        const words = cleanText.split(/\s+/).filter((w: string) => w.length > 0).slice(0, 5);
+        const snippet = words.join(' ');
+
+        if (snippet.length > 3) {
+             url += `#:~:text=${encodeURIComponent(snippet)}`;
         }
     }
     return url;
@@ -307,14 +316,6 @@ async function performSearch() {
                                         </p>
                                     </div>
                                     
-                                    <!-- Added Content URL Link with Text Fragment Deep Link -->
-                                    <div v-if="doc.content_url" class="mb-3">
-                                        <span class="text-subtitle-2 font-weight-bold mr-1">Link:</span>
-                                        <a :href="getDeepLink(doc)" target="_blank" class="text-decoration-none text-primary text-body-2" @click.stop>
-                                            {{ doc.content_url }} <v-icon size="small" class="ml-1">mdi-open-in-new</v-icon>
-                                        </a>
-                                    </div>
-
                                      <!-- Summary -->
                                     <p class="text-body-1 text-medium-emphasis mb-4" style="max-width: 900px;" v-if="doc.summary">
                                         {{ doc.summary }}
@@ -335,6 +336,14 @@ async function performSearch() {
                                                 <p class="text-body-2 text-grey-darken-2 font-italic bg-grey-lighten-5 pa-3 rounded">
                                                     {{ doc.historical_context }}
                                                 </p>
+                                            </div>
+
+                                            <!-- Added Content URL Link with Text Fragment Deep Link -->
+                                            <div v-if="doc.content_url" class="mb-4">
+                                                <h4 class="text-subtitle-2 font-weight-bold text-uppercase text-medium-emphasis mb-1">Link</h4>
+                                                <a :href="getDeepLink(doc)" target="_blank" class="text-decoration-none text-primary text-body-2" @click.stop>
+                                                    {{ doc.content_url }} <v-icon size="small" class="ml-1">mdi-open-in-new</v-icon>
+                                                </a>
                                             </div>
 
                                             <div class="d-flex flex-wrap gap-4">
