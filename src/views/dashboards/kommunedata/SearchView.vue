@@ -69,10 +69,11 @@ function getDeepLink(doc: any) {
         // Strip HTML tags (like <b> match highlights)
         const cleanText = doc.search_sentences.replace(/<[^>]*>/g, '').trim();
         
-        // Take a reasonable snippet (first 10-15 words) to ensure browser match
-        // encodeURIComponent handles special chars
-        if (cleanText) {
-             url += `#:~:text=${encodeURIComponent(cleanText)}`;
+        // Take just the first 6 words. Long sentences crash some PDF viewers.
+        const shortSnippet = cleanText.split(/\s+/).slice(0, 6).join(' ');
+
+        if (shortSnippet) {
+             url += `#:~:text=${encodeURIComponent(shortSnippet)}`;
         }
     }
     return url;
